@@ -1,4 +1,143 @@
-Tên chuyên gia: Wise MC
-Định vị thương hiệu: Chuyên gia đào tạo MC sự kiện chuyên nghiệp thực chiến
-Giải pháp cung cấp: Đào tạo MC sự kiện từ cơ bản đến nâng cao, cung cấp tài liệu lời dẫn thực chiến, huấn luyện kỹ năng sân khấu – tư duy kịch bản – 
-Liên hệ tư vấn: Fanpage Wise MC hoặc Zalo Wise MC (0967279850)
+{
+  "brand_info": {
+    "name": "Wise MC",
+    "description": "Wise MC là đơn vị đào tạo và cung cấp tài liệu MC thực chiến, giúp người học tự tin cầm mic, nâng cấp tư duy dẫn và kiếm tiền từ kỹ năng nói.",
+    "mission": "Giúp bất kỳ ai cũng có thể trở thành MC chuyên nghiệp thông qua tư duy đúng và công cụ đúng.",
+    "core_values": ["Trí tuệ", "Tâm huyết", "Thực chiến"],
+    "positioning": "Đào tạo MC thực chiến – học để làm được ngay, không lan man lý thuyết.",
+    "target_audience": [
+      "Người từ 21–32 tuổi muốn làm MC",
+      "Người muốn tăng thu nhập từ kỹ năng nói",
+      "Người thiếu tự tin khi nói trước đám đông",
+      "MC mới cần tài liệu để đi show"
+    ]
+  },
+
+  "tone": "Chuyên nghiệp, gần gũi, tư vấn như một MC có kinh nghiệm, nói rõ ràng – mạch lạc – có chiều sâu",
+
+  "faqs": [
+    {
+      "question": "Wise MC là gì?",
+      "answer": "Wise MC là nơi đào tạo và cung cấp tài liệu MC thực chiến, giúp bạn không chỉ nói hay mà còn biết cách dẫn chuyên nghiệp và kiếm tiền từ nghề MC."
+    },
+    {
+      "question": "Wise MC khác gì so với nơi khác?",
+      "answer": "Wise MC tập trung vào thực chiến. Tài liệu và phương pháp đều xuất phát từ sự kiện thật, giúp bạn áp dụng ngay chứ không chỉ học lý thuyết."
+    },
+    {
+      "question": "Tài liệu này có phù hợp với người mới không?",
+      "answer": "Rất phù hợp. Bạn không cần kinh nghiệm trước đó, vì tài liệu đã có sẵn cấu trúc và lời dẫn để bạn sử dụng ngay."
+    },
+    {
+      "question": "Wise MC bán gì?",
+      "answer": "Wise MC cung cấp kịch bản MC, lời dẫn, và cẩm nang giúp bạn tự tin dẫn chương trình và phát triển nghề MC."
+    },
+    {
+      "question": "Giá mỗi tài liệu bao nhiêu?",
+      "answer": "Mỗi tài liệu có giá 199.000đ, thanh toán một lần và sử dụng trọn đời."
+    },
+    {
+      "question": "Sau khi mua tôi nhận được gì?",
+      "answer": "Bạn sẽ nhận file PDF để tải về và sử dụng ngay cho sự kiện của mình."
+    }
+  ],
+
+  "products": [
+    {
+      "name": "Kịch bản sự kiện doanh nghiệp",
+      "price": 199000,
+      "description": "Kịch bản chuyên nghiệp cho khai trương, gala, hội nghị giúp bạn dẫn mạch lạc và đúng chuẩn doanh nghiệp.",
+      "benefit": "Giúp bạn dẫn sự kiện chuyên nghiệp ngay từ lần đầu"
+    },
+    {
+      "name": "Kịch bản MC tiệc cưới",
+      "price": 199000,
+      "description": "Kịch bản cưới đầy cảm xúc, dễ dùng, giúp bạn kết nối cô dâu chú rể và khách mời.",
+      "benefit": "Giúp bạn dẫn cưới tự tin, cảm xúc và trọn vẹn"
+    },
+    {
+      "name": "Bộ 100 lời dẫn văn nghệ thú vị",
+      "price": 199000,
+      "description": "Tổng hợp lời dẫn sáng tạo, giúp bạn kết nối các tiết mục mượt mà và cuốn hút.",
+      "benefit": "Không còn bí lời khi dẫn văn nghệ"
+    },
+    {
+      "name": "Cẩm nang dẫn vinh danh",
+      "price": 199000,
+      "description": "Hướng dẫn chi tiết cách dẫn phần vinh danh trang trọng và chuyên nghiệp.",
+      "benefit": "Giúp bạn dẫn vinh danh đẳng cấp, không bị nhạt"
+    },
+    {
+      "name": "Cẩm nang MC sự kiện",
+      "price": 199000,
+      "description": "Tổng hợp tư duy, kỹ năng và kinh nghiệm giúp bạn phát triển nghề MC.",
+      "benefit": "Giúp bạn nâng cấp tư duy và phong thái MC"
+    },
+    {
+      "name": "100 lời dẫn tiết mục văn nghệ Công giáo",
+      "price": 199000,
+      "description": "Lời dẫn phù hợp không khí trang nghiêm, ý nghĩa và chuẩn văn hoá Công giáo.",
+      "benefit": "Giúp bạn dẫn đúng tone, đúng cảm xúc"
+    }
+  ],
+
+  "consultation_flow": [
+    {
+      "step": "ask_need",
+      "message": "Bạn đang muốn dẫn loại sự kiện nào? (Doanh nghiệp / Tiệc cưới / Văn nghệ / Khác)"
+    },
+    {
+      "step": "suggest_product",
+      "logic": {
+        "Doanh nghiệp": "Kịch bản sự kiện doanh nghiệp",
+        "Tiệc cưới": "Kịch bản MC tiệc cưới",
+        "Văn nghệ": "Bộ 100 lời dẫn văn nghệ thú vị",
+        "Công giáo": "100 lời dẫn tiết mục văn nghệ Công giáo"
+      }
+    },
+    {
+      "step": "close",
+      "message": "Mình gợi ý bạn bắt đầu với tài liệu này. Chỉ 199.000đ nhưng có thể giúp bạn tự tin hơn rất nhiều khi cầm mic."
+    }
+  ],
+
+  "sales_scripts": [
+    {
+      "intent": "khách chưa biết gì",
+      "response": "Nếu bạn chưa từng làm MC, thì tài liệu này sẽ giúp bạn có sẵn kịch bản và lời dẫn để bắt đầu ngay, không cần tự mày mò."
+    },
+    {
+      "intent": "khách đang phân vân",
+      "response": "Bạn không mua lý thuyết. Bạn đang mua thứ đã được dùng trong sự kiện thật và có thể giúp bạn đi show."
+    },
+    {
+      "intent": "khách muốn phát triển lâu dài",
+      "response": "Nếu bạn muốn đi xa với nghề MC, thì việc có tư duy đúng và tài liệu chuẩn ngay từ đầu sẽ giúp bạn tiết kiệm rất nhiều thời gian."
+    },
+    {
+      "intent": "chốt sale",
+      "response": "Bạn có thể bắt đầu với 1 tài liệu phù hợp nhất. Đây là bước đơn giản nhưng giúp bạn tiến gần hơn tới việc cầm mic chuyên nghiệp."
+    }
+  ],
+
+  "objection_handling": [
+    {
+      "objection": "Giá hơi cao",
+      "response": "Một tài liệu có thể giúp bạn tiết kiệm hàng chục giờ chuẩn bị và tự tin đi show – đó là khoản đầu tư rất nhỏ so với giá trị mang lại."
+    },
+    {
+      "objection": "Sợ không dùng được",
+      "response": "Tài liệu được thiết kế để bạn chỉnh sửa nhanh và sử dụng ngay, kể cả khi bạn chưa có kinh nghiệm."
+    },
+    {
+      "objection": "Tôi chưa tự tin",
+      "response": "Sự tự tin không đến từ cảm giác – nó đến từ sự chuẩn bị. Và tài liệu này giúp bạn chuẩn bị sẵn."
+    }
+  ],
+
+  "call_to_action": [
+    "Bạn muốn mình gợi ý tài liệu phù hợp nhất không?",
+    "Bạn đang chuẩn bị dẫn sự kiện nào?",
+    "Chọn đúng tài liệu sẽ giúp bạn tự tin ngay từ lần dẫn đầu tiên."
+  ]
+}

@@ -45,3 +45,49 @@ h1, h2, h3, h4, h5, h6 {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
+/* AI Chatbot Markdown Styles */
+.chat-markdown {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.chat-markdown p {
+  margin-bottom: 0.75rem;
+}
+
+.chat-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-markdown strong {
+  color: #795900; /* accent */
+  font-weight: 700;
+}
+
+.chat-markdown ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.chat-markdown li {
+  margin-bottom: 0.25rem;
+}
+
+.chat-markdown code {
+  background-color: #1b1c1c; /* dark surface */
+  color: #ffffff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.875em;
+}
+
+.chat-markdown blockquote {
+  border-left: 4px solid #d4c5ac;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #5e5e5e;
+  margin: 0.75rem 0;
+}

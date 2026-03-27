@@ -3,26 +3,35 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { marked } from "marked";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
 
+const INITIAL_MESSAGE: Message = { 
+  role: "assistant", 
+  content: "Chào bạn! Tôi là trợ lý ảo của Wise MC. Tôi có thể giúp gì cho bạn hôm nay?" 
+};
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Chào bạn! Tôi là trợ lý ảo của Wise MC. Tôi có thể giúp gì cho bạn hôm nay?" },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Auto scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: "smooth"
+      });
     }
-  }, [messages]);
+  }, [messages, isLoading]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -45,10 +54,19 @@ export default function ChatWidget() {
       }
     } catch (error) {
       console.error("Chat error:", error);
-      setMessages((prev) => [...prev, { role: "assistant", content: "Xin lỗi, đã có lỗi xảy ra. Hãy thử lại sau nhé!" }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Xin lỗi, đã có lỗi xảy ra. Bạn vui lòng liên hệ Zalo 0123456789 để được hỗ trợ nhé!" }]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setMessages([INITIAL_MESSAGE]);
+    // Stop rotation after exactly 500ms
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 500);
   };
 
   return (
@@ -59,35 +77,50 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="mb-4 w-80 md:w-96 bg-white rounded-3xl shadow-2xl overflow-hidden border border-zinc-100 flex flex-col h-[500px]"
+            className="mb-4 w-80 md:w-96 bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col h-[600px] ring-1 ring-black/5"
           >
             {/* Header */}
-            <div className="bg-primary-container p-4 text-on-primary-fixed flex justify-between items-center shadow-sm">
+            <div className="bg-primary-container p-5 text-on-primary-fixed flex justify-between items-center shadow-lg relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
-                  <span className="material-symbols-outlined text-xl">smart_toy</span>
+                <div className="relative">
+                  <div className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                    <span className="material-symbols-outlined text-2xl">smart_toy</span>
+                  </div>
+                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-primary-container rounded-full animate-pulse" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm">Wise MC AI Assistant</h4>
-                  <div className="flex items-center gap-1.5 leading-none mt-0.5">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] opacity-80 uppercase tracking-wider font-bold">Trực tuyến</span>
-                  </div>
+                  <h4 className="font-black text-sm uppercase tracking-tight">AI Assistant</h4>
+                  <p className="text-[10px] font-bold opacity-70 tracking-widest uppercase flex items-center gap-1">
+                    Trực tuyến
+                  </p>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)} 
-                className="hover:bg-white/10 p-1.5 rounded-full transition-colors"
-                title="Đóng chat"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <motion.button 
+                  animate={isRefreshing ? { rotate: 360 } : { rotate: 0 }}
+                  transition={isRefreshing ? { repeat: Infinity, duration: 0.5, ease: "linear" } : { duration: 0.2 }}
+                  onClick={handleRefresh}
+                  className="hover:bg-black/5 p-2 rounded-full transition-colors flex items-center justify-center"
+                  title="Làm mới hội thoại"
+                >
+                  <span className="material-symbols-outlined text-xl">refresh</span>
+                </motion.button>
+                <button 
+                  onClick={() => setIsOpen(false)} 
+                  className="hover:bg-black/5 p-2 rounded-full transition-colors flex items-center justify-center"
+                  title="Đóng"
+                >
+                  <span className="material-symbols-outlined text-xl">close</span>
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-grow p-4 overflow-y-auto space-y-4 bg-zinc-50/50">
+            <div ref={scrollRef} className="flex-grow p-6 overflow-y-auto space-y-6 bg-transparent">
               {messages.map((msg, i) => (
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   key={i}
                   className={cn(
                     "flex flex-col max-w-[85%]",
@@ -96,43 +129,50 @@ export default function ChatWidget() {
                 >
                   <div
                     className={cn(
-                      "px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm",
+                      "px-5 py-3.5 rounded-2xl shadow-md chat-markdown",
                       msg.role === "user" 
-                        ? "bg-primary-container text-on-primary-fixed rounded-tr-none font-medium" 
-                        : "bg-white text-zinc-800 rounded-tl-none border border-zinc-100"
+                        ? "bg-primary-container text-on-primary-fixed rounded-tr-none font-bold" 
+                        : "bg-white/90 text-zinc-800 rounded-tl-none border border-zinc-100/50"
                     )}
-                  >
-                    {msg.content}
-                  </div>
-                </div>
+                    dangerouslySetInnerHTML={{ 
+                      __html: marked.parse(msg.content, { breaks: true }) as string 
+                    }}
+                  />
+                </motion.div>
               ))}
+              
               {isLoading && (
-                <div className="flex gap-2 items-center text-zinc-400 p-2">
-                  <span className="w-1.5 h-1.5 bg-zinc-300 rounded-full animate-bounce" />
-                  <span className="w-1.5 h-1.5 bg-zinc-300 rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <span className="w-1.5 h-1.5 bg-zinc-300 rounded-full animate-bounce [animation-delay:0.4s]" />
+                <div className="flex flex-col items-start max-w-[85%] mr-auto">
+                   <div className="bg-white/90 px-5 py-3 rounded-2xl rounded-tl-none border border-zinc-100/50 flex items-center gap-2 text-zinc-400 text-sm font-bold animate-pulse">
+                      <span>Đang nhập</span>
+                      <div className="flex gap-1">
+                        <span className="w-1 h-1 bg-zinc-400 rounded-full animate-bounce" />
+                        <span className="w-1 h-1 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+                        <span className="w-1 h-1 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                      </div>
+                   </div>
                 </div>
               )}
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-zinc-100 bg-white shadow-inner">
-              <div className="relative flex items-center gap-2">
+            <div className="p-6 border-t border-black/5 bg-white/50 backdrop-blur-md">
+              <div className="relative flex items-center gap-3">
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Nhập câu hỏi của bạn..."
-                  className="flex-grow bg-zinc-100/80 border-none rounded-full px-5 py-2.5 text-sm focus:ring-2 focus:ring-primary-container/30 outline-none transition-all placeholder:text-zinc-400"
+                  placeholder="Hỏi chuyên gia về AI/Automation..."
+                  className="flex-grow bg-white/80 border-none rounded-2xl px-6 py-3.5 text-sm font-medium focus:ring-2 focus:ring-primary-container/30 outline-none transition-all placeholder:text-zinc-400 shadow-inner"
                 />
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleSend}
-                  className="bg-primary-container text-on-primary-fixed p-2.5 rounded-full shadow-lg shadow-primary-container/20 flex items-center justify-center"
+                  className="bg-primary-container text-on-primary-fixed p-3.5 rounded-2xl shadow-xl shadow-primary-container/30 flex items-center justify-center"
                 >
-                  <span className="material-symbols-outlined text-xl">send</span>
+                  <span className="material-symbols-outlined text-2xl font-bold">send</span>
                 </motion.button>
               </div>
             </div>
@@ -141,15 +181,16 @@ export default function ChatWidget() {
       </AnimatePresence>
 
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        whileTap={{ scale: 0.9, rotate: -5 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white transition-all duration-300",
-          isOpen ? "bg-zinc-800 rotate-90" : "bg-primary-container text-on-primary-fixed"
+          "w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-white transition-all duration-300 relative group",
+          isOpen ? "bg-zinc-900 rotate-90" : "bg-primary-container text-on-primary-fixed"
         )}
       >
-        <span className="material-symbols-outlined text-3xl">
+        <div className="absolute inset-0 rounded-full bg-primary-container animate-ping opacity-20 group-hover:hidden" />
+        <span className="material-symbols-outlined text-4xl relative z-10 transition-transform duration-300">
           {isOpen ? "close" : "chat_bubble"}
         </span>
       </motion.button>
