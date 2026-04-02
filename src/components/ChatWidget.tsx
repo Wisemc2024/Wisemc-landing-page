@@ -27,34 +27,21 @@ const LEAD_DATA_PATTERN = /\|\|LEAD_DATA:\s*(\{.*?\})\s*\|\|/;
  * Nếu phát hiện lead → gửi lên Google Sheets kèm lịch sử chat.
  * Trả về câu trả lời sạch (đã xóa tag).
  */
-function processAIResponse(aiResponse: string, chatHistory: Message[]): string {
-  // Xây dựng text lịch sử chat cho Google Sheets
-  let formattedHistory = "";
-  if (chatHistory && chatHistory.length > 0) {
-    formattedHistory = chatHistory.map(msg => {
-      const role = msg.role === 'user' ? 'Khách' : 'AI';
-      const content = msg.content.replace(LEAD_DATA_PATTERN, "").trim();
-      return `${role}: ${content}`;
-    }).join('\n\n');
-  }
-
+function processAIResponse(aiResponse: string): { cleanedContent: string; leadData: any } {
+  let leadData = null;
   if (aiResponse.includes("||LEAD_DATA:")) {
     const match = aiResponse.match(LEAD_DATA_PATTERN);
     if (match && match[1]) {
       try {
-        const leadData = JSON.parse(match[1]);
+        leadData = JSON.parse(match[1]);
         console.log("✅ Dữ liệu khách hàng bóc được:", leadData);
-
-        if (leadData.name || leadData.phone || leadData.email) {
-          sendLeadToGoogleSheets(leadData, formattedHistory);
-        }
       } catch (error) {
         console.error("❌ Lỗi parse JSON từ AI:", error);
       }
     }
     aiResponse = aiResponse.replace(LEAD_DATA_PATTERN, "").trim();
   }
-  return aiResponse;
+  return { cleanedContent: aiResponse, leadData };
 }
 
 /**
@@ -144,8 +131,29 @@ export default function ChatWidget() {
       console.log("🤖 Raw AI Response:", data.content); // Debug AI output
       
       if (data.role === "assistant" || data.content) {
-        // Bóc tách lead data trước khi hiển thị
-        const cleanedContent = processAIResponse(data.content, [...messages, userMsg]);
+        // 1. Bóc tách lead data và làm sạch nội dung
+        const { cleanedContent, leadData: newLeadData } = processAIResponse(data.content);
+        
+        // 2. Cập nhật Lead Data vào State nếu có thông tin mới
+        const currentLead = {
+          name: newLeadData?.name || leadData.name,
+          phone: newLeadData?.phone || leadData.phone,
+          email: newLeadData?.email || leadData.email
+        };
+        if (newLeadData) setLeadData(currentLead);
+
+        // 3. Chuẩn bị lịch sử chat đầy đủ (bao gồm cả câu trả lời vừa nhận) để gửi lên Sheets
+        const fullHistoryForSheets = [...messages, userMsg, { role: "assistant", content: cleanedContent }]
+          .map(msg => {
+            const role = msg.role === 'user' ? 'Khách' : 'AI';
+            return `${role}: ${msg.content}`;
+          }).join('\n\n');
+
+        // 4. LUÔN LUÔN đồng bộ lên Sheets nếu đã có Tên hoặc SĐT
+        if (currentLead.name || currentLead.phone) {
+          sendLeadToGoogleSheets(currentLead, fullHistoryForSheets);
+        }
+
         setMessages((prev) => [...prev, { role: "assistant", content: cleanedContent }]);
       }
     } catch (error) {
